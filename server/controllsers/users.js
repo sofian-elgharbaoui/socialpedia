@@ -34,7 +34,6 @@ const updateUser = async (req, res) => {
 };
 
 const deleteUser = async (req, res) => {
-  const id = req.params.id;
   const { email, password } = req.body;
   const userInfo = await User.findOne({ email });
   if (!userInfo) {
