@@ -44,10 +44,22 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
-    location: String,
-    occupaton: String,
-    viewedProfile: Number,
-    impressions: Number,
+    location: {
+      type: String,
+      default: "",
+    },
+    occupation: {
+      type: String,
+      default: "",
+    },
+    viewedProfile: {
+      type: Number,
+      default: 0,
+    },
+    impressions: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );
@@ -77,6 +89,14 @@ userSchema.methods.createJWT = function () {
     process.env.JWT_SECRET_KEY,
     { expiresIn: process.env.JWT_LIFETIME }
   );
+};
+
+userSchema.methods.removePassword = function () {
+  let userInfoObj = this.toObject();
+  // I used this because the delete keyword don't work,
+  // because the Obj returned from the mongoDB is not a plain Obj.
+  delete userInfoObj.password;
+  return userInfoObj;
 };
 
 // pay attention, don't add the "new" keyword before creating any model.

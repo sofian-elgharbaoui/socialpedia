@@ -1,9 +1,10 @@
 // call packages
+const path = require("path");
 const express = require("express");
 const bodyParcer = require("body-parser");
 const { default: helmet } = require("helmet");
 const cors = require("cors");
-const multer = require("multer");
+const morgan = require("morgan");
 
 // connect to db
 const connectDB = require("./db/connectDB");
@@ -22,20 +23,25 @@ require("express-async-errors");
 app.use(cors());
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
+app.use(morgan("common"));
+app.use(express.json());
 app.use(bodyParcer.json({ limit: "30mb", extended: true }));
 app.use(bodyParcer.urlencoded({ limit: "30mb", extended: true }));
+app.use("/assets", express.static(path.join(__dirname, "/public/assets")));
 
 // middlewares
 const errorsHandler = require("./middlewares/errors_handler");
 
 // routers
-const userRouter = require("./routes/user");
+const authRouter = require("./routes/auth");
+const usersRouter = require("./routes/users");
 
 app.get("/", (req, res) => {
   res.status(200).send("hello world!");
 });
 
-app.use("/user", userRouter);
+app.use("/auth", authRouter);
+app.use("/users", usersRouter);
 
 app.use(errorsHandler);
 

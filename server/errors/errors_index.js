@@ -7,4 +7,11 @@ class BadRequestErr extends Error {
   }
 }
 
-module.exports = { BadRequestErr };
+class UnauthenticatedErr extends Error {
+  constructor(message) {
+    super(message);
+    this.statusCode = StatusCodes.UNAUTHORIZED;
+  }
+}
+
+module.exports = { BadRequestErr, UnauthenticatedErr };
