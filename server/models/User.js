@@ -65,6 +65,11 @@ const userSchema = new mongoose.Schema(
 );
 
 userSchema.pre("save", async function (next) {
+  // I made this functionality to skip the re-hashing password in case I don't modify it.
+  if (!this.isModified("password")) {
+    return next();
+  }
+
   this.firstName = this.firstName.toLowerCase();
   this.lastName = this.lastName.toLowerCase();
   this.email = this.email.toLowerCase();
