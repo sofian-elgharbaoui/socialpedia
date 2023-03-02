@@ -32,7 +32,7 @@ const registerUser = async (req, res) => {
   let userInfo = await User.create(inputsInfo);
 
   userInfo = userInfo.removePassword();
-  res.status(StatusCodes.CREATED).json(userInfo);
+  res.status(StatusCodes.CREATED).json({ userInfo });
 };
 
 const loginUser = async (req, res) => {
@@ -47,8 +47,8 @@ const loginUser = async (req, res) => {
   if (!userInfo) {
     throw new BadRequestErr("There is no user with this email!");
   }
-
-  const isPasswordCorrect = await userInfo.comparePassword(password);
+  // I noticed that just the person who has just regestered has the ability to login.
+  let isPasswordCorrect = await userInfo.comparePassword(password);
   if (!isPasswordCorrect) {
     throw new BadRequestErr("you have passed the wrong password.");
   }
