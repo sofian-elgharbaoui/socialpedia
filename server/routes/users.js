@@ -8,7 +8,7 @@ const {
   deleteUser,
   getAllFriends,
   addRemoveFriend,
-} = require("../controllsers/users");
+} = require("../controllers/users");
 
 usersRouter
   .route("/:id")

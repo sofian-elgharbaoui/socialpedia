@@ -35,6 +35,7 @@ const errorsHandler = require("./middlewares/errors_handler");
 // routers
 const authRouter = require("./routes/auth");
 const usersRouter = require("./routes/users");
+const postsRouter = require("./routes/posts");
 
 app.get("/", (req, res) => {
   res.status(200).send("hello world!");
@@ -42,6 +43,7 @@ app.get("/", (req, res) => {
 
 app.use("/auth", authRouter);
 app.use("/users", usersRouter);
+app.use("/posts", postsRouter);
 
 app.use(errorsHandler);
 

@@ -29,6 +29,7 @@ const registerUser = async (req, res) => {
     inputsInfo = { ...inputsInfo, picturePath };
   }
   // remember, I must write User.create(), not just User()
+  //(if I want to do that, then I should put the new keyword before User(), which refers to a new instance)
   let userInfo = await User.create(inputsInfo);
 
   userInfo = userInfo.removePassword();
