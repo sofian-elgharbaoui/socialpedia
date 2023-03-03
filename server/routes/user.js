@@ -1,5 +1,5 @@
 const express = require("express");
-const usersRouter = express.Router();
+const userRouter = express.Router();
 
 const authMiddleware = require("../middlewares/auth");
 const {
@@ -8,16 +8,15 @@ const {
   deleteUser,
   getAllFriends,
   addRemoveFriend,
-} = require("../controllers/users");
+} = require("../controllers/user");
 
-usersRouter
-  .route("/:id")
+userRouter
+  .route("/")
   .get(authMiddleware, getUser)
   .patch(authMiddleware, updateUser)
   .delete(authMiddleware, deleteUser);
 
-usersRouter.get("/:id/friends", authMiddleware, getAllFriends);
+userRouter.get("/friends", authMiddleware, getAllFriends);
+userRouter.patch("/friends/:friendId", authMiddleware, addRemoveFriend);
 
-usersRouter.patch("/:id/friends/:friendId", authMiddleware, addRemoveFriend);
-
-module.exports = usersRouter;
+module.exports = userRouter;
