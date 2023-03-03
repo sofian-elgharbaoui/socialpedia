@@ -1,6 +1,7 @@
 const express = require("express");
 const postsRouter = express.Router();
 
+const upload = require("../helpers/upload");
 const authMiddleware = require("../middlewares/auth");
 const {
   getFeedPosts,
@@ -13,7 +14,7 @@ const {
 postsRouter
   .route("/")
   .get(authMiddleware, getFeedPosts)
-  .post(authMiddleware, createPost);
+  .post(authMiddleware, upload.single("postPicture"), createPost);
 
 postsRouter.get("/profile", authMiddleware, getUserPosts);
 postsRouter.patch("/like", authMiddleware, likePost);
