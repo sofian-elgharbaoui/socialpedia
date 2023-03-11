@@ -1,25 +1,19 @@
-import logo from './logo.svg';
-import './App.css';
+import { useMemo } from "react";
+import { useSelector } from "react-redux";
+import { ThemeProvider } from "@mui/material";
+import { createTheme } from "@mui/material/styles";
 
-function App() {
+import themeSettings from "./theme";
+
+export default function App() {
+  const mode = useSelector((state) => state.mode);
+  const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <ThemeProvider theme={theme}>
+        {/* pass your components here*/}
+      </ThemeProvider>
     </div>
   );
 }
-
-export default App;
