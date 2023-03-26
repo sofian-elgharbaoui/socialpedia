@@ -39,6 +39,7 @@ export default function themeSettings(mode) {
               dark: colorTokens.primary[200],
               main: colorTokens.primary[500],
               light: colorTokens.primary[800],
+              contrastText: "#fff",
             },
             neutral: {
               dark: colorTokens.grey[100],
@@ -73,7 +74,7 @@ export default function themeSettings(mode) {
           }),
     },
     typography: {
-      fontFamily: ["Rubik", "sans-serif"].join(", "),
+      fontFamily: ["Rubik", "sans-serif"].join(","),
       fontSize: 12,
       h1: {
         fontFamily: ["Rubik", "sans-serif"].join(","),

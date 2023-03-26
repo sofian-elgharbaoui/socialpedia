@@ -1,6 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-
-import authReducer from "../features/authSlice";
+import authReducer from "../authState/authSlice";
 import homeReducer from "../features/homePage/homeSlice";
 import loginReducer from "../features/loginPage/loginSlice";
 import profileReducer from "../features/profilePage/profileSlice";
