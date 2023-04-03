@@ -1,12 +1,10 @@
 // call packages
 const path = require("path");
 const express = require("express");
-const bodyParcer = require("body-parser");
 const { default: helmet } = require("helmet");
 const cors = require("cors");
 const morgan = require("morgan");
 
-// connect to db
 const connectDB = require("./db/connectDB");
 /*
 Why I MUST declare the "express-async-errors" package before the errorsHandler middleware?
@@ -24,12 +22,11 @@ app.use(cors());
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(morgan("common"));
-app.use(express.json());
-app.use(bodyParcer.json({ limit: "30mb", extended: true }));
-app.use(bodyParcer.urlencoded({ limit: "30mb", extended: true }));
+app.use(express.json({ limit: "30mb", extended: true }));
+app.use(express.urlencoded({ limit: "30mb", extended: true }));
 app.use("/assets", express.static(path.join(__dirname, "/public/assets")));
 
-// middlewares
+// error middleware
 const errorsHandler = require("./middlewares/errors_handler");
 
 // routers
@@ -47,6 +44,7 @@ app.use("/posts", postsRouter);
 
 app.use(errorsHandler);
 
+// connect to db
 const port = process.env.PORT || 3001;
 (async function () {
   try {

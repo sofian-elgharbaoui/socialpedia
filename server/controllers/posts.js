@@ -43,7 +43,8 @@ const createPost = async (req, res) => {
   }
 
   await postInfo.save();
-  res.status(StatusCodes.CREATED).json({ postInfo });
+  const allPosts = await Post.find();
+  res.status(StatusCodes.CREATED).json({ allPosts });
 };
 
 const likePost = async (req, res) => {

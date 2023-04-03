@@ -1,16 +1,19 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+
 // mui comps
-import AppBar from "@mui/material/AppBar";
-import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import IconButton from "@mui/material/IconButton";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import Drawer from "@mui/material/Drawer";
-import useMediaQuery from "@mui/material/useMediaQuery";
+import {
+  AppBar,
+  TextField,
+  Typography,
+  Container,
+  IconButton,
+  Select,
+  MenuItem,
+  Drawer,
+  useMediaQuery,
+} from "@mui/material";
 
 import { useTheme } from "@mui/material/styles";
 
@@ -27,7 +30,7 @@ import HelpIcon from "@mui/icons-material/Help";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 
-import { setMode } from "../authState/authSlice";
+import { setMode } from "../features/authPage/authSlice";
 
 export default function NavBar() {
   const [userMenuValue, setUserMenuValue] = useState("");
@@ -49,7 +52,7 @@ export default function NavBar() {
     setIsMenuOpened(false);
   }
   return (
-    <AppBar sx={{ bgcolor: "background.alt", py: 1.2 }}>
+    <AppBar sx={{ bgcolor: "background.alt", py: 1.2 }} position="sticky">
       <Container>
         <FlexBetween>
           <FlexBetween gap={5}>

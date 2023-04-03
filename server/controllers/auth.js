@@ -51,7 +51,7 @@ const loginUser = async (req, res) => {
   // I noticed that just the person who has just regestered has the ability to login.
   let isPasswordCorrect = await userInfo.comparePassword(password);
   if (!isPasswordCorrect) {
-    throw new BadRequestErr("you have passed the wrong password.");
+    throw new BadRequestErr("You have passed the wrong password.");
   }
 
   let token = userInfo.createJWT();
