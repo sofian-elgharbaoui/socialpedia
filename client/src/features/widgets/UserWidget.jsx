@@ -1,5 +1,4 @@
 import { useSelector } from "react-redux";
-
 import { useTheme } from "@mui/material/styles";
 
 import {
@@ -15,19 +14,25 @@ import {
   Typography,
   ListItem,
 } from "@mui/material";
+
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import EditIcon from "@mui/icons-material/Edit";
 import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
+import { useNavigate } from "react-router-dom";
 
 function userImg(path) {
   return `http://localhost:3001/assets/${path}`;
 }
 
-export default function UserWedget() {
+export default function UserWidget() {
+  const theme = useTheme();
+  const navigate = useNavigate();
+
   const {
+    _id,
     firstName,
     lastName,
     friends,
@@ -42,7 +47,6 @@ export default function UserWedget() {
     .map((v) => v[0].toUpperCase() + v.slice(1))
     .join(" ");
 
-  const theme = useTheme();
   return (
     <Card style={{ boxShadow: "none", borderRadius: 14 }}>
       <CardHeader
@@ -50,11 +54,18 @@ export default function UserWedget() {
         title={fullName}
         subheader={friends.length + " friends"}
         action={
-          <IconButton>
+          <IconButton
+            onClick={() => navigate(`/profile/${_id}`)}
+            sx={{
+              cursor: "pointer",
+              "&:hover": {
+                color: "grey.500",
+              },
+            }}
+          >
             <ManageAccountsIcon />
           </IconButton>
         }
-        textAling
       />
       <Divider variant="middle" />
       <List sx={{ color: theme.palette.grey[600] }}>

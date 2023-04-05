@@ -26,7 +26,7 @@ import AttachmentIcon from "@mui/icons-material/Attachment";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 
-import { WedgetWrapper } from "../../components/WedgetWrapper";
+import { WidgetWrapper } from "../../components/WidgetWrapper";
 import { FlexBetween } from "../../components/FlexBetween";
 import { useState } from "react";
 
@@ -83,7 +83,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
   color: theme.palette.medium,
 }));
 
-export default function CreatePostWedget() {
+export default function CreatePostWidget({ urlOrigin }) {
   const [isDropzoneOpened, setIsDropzoneOpened] = useState(false);
   const [isImage, setIsImage] = useState(false);
   const token = useSelector((s) => s.auth.token);
@@ -126,13 +126,14 @@ export default function CreatePostWedget() {
 
       const {
         data: { allPosts },
-      } = await axios.post("http://localhost:3001/posts", formData, {
+      } = await axios.post(`${urlOrigin}/posts`, formData, {
         headers: {
           Authorization: token,
         },
       });
       // this line of code will make the feedPosts comp render again after each submiting click
-      dispatch(setFeedPosts({ posts: allPosts }));
+      dispatch(setFeedPosts({ posts: allPosts.map((post) => post._id) }));
+      setIsImage(false);
       onSubmitProps.resetForm();
     } catch (error) {
       console.error(error);
@@ -140,7 +141,7 @@ export default function CreatePostWedget() {
   }
 
   return (
-    <WedgetWrapper mb={1}>
+    <WidgetWrapper mb={1}>
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
         {({ values, setFieldValue, getFieldProps }) => (
           <Form>
@@ -250,6 +251,6 @@ export default function CreatePostWedget() {
           </Form>
         )}
       </Formik>
-    </WedgetWrapper>
+    </WidgetWrapper>
   );
 }
