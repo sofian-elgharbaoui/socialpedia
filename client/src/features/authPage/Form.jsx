@@ -1,3 +1,4 @@
+import { nanoid } from "@reduxjs/toolkit";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -54,11 +55,54 @@ const InitialValues = {
   avatar: "",
 };
 
+function modifiedPicturePath(picturePath) {
+  const arLetters = [
+    "ا",
+    "ب",
+    "ت",
+    "ث",
+    "ج",
+    "ح",
+    "خ",
+    "د",
+    "ذ",
+    "ر",
+    "ز",
+    "س",
+    "ش",
+    "ص",
+    "ض",
+    "ط",
+    "ظ",
+    "ع",
+    "غ",
+    "ف",
+    "ق",
+    "ك",
+    "ل",
+    "م",
+    "ن",
+    "ه",
+    "و",
+    "ي",
+  ];
+  let lastDotIndex = picturePath.lastIndexOf(".");
+  let picturePathLetters = picturePath.substring(0, lastDotIndex).split("");
+  let fileExtention = picturePath.substring(lastDotIndex);
+
+  for (const letter of arLetters) {
+    if (picturePathLetters.includes(letter)) {
+      return nanoid() + fileExtention;
+    }
+  }
+  return picturePath;
+}
+
 // to solve the problem of having the same values in both forms,
 // make the fields that are connected and seems alike visible always,
 // and the other fields visible only if the current page is the register page.
 
-export default function MyForm({ setSnackbarMsg }) {
+export default function MyForm({ urlOrigin }) {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isRegister, setIsRegister] = useState(false);
   const [isAlertOpened, setIsAlertOpened] = useState(false);
@@ -77,12 +121,9 @@ export default function MyForm({ setSnackbarMsg }) {
       }
 
       // I used teh formData API to add more fields to the form before sending it
-      formData.append("picturePath", values.avatar.path);
+      formData.append("picturePath", modifiedPicturePath(values.avatar.path));
 
-      let userData = await axios.post(
-        "http://localhost:3001/auth/register",
-        formData
-      );
+      let userData = await axios.post(`${urlOrigin}/auth/register`, formData);
 
       // I have to handle the server validation errors/success with this data
       console.log(userData);
@@ -101,7 +142,7 @@ export default function MyForm({ setSnackbarMsg }) {
 
   async function login({ email, password }, onSubmitProps) {
     try {
-      const userData = await axios.post("http://localhost:3001/auth/login", {
+      const userData = await axios.post(`${urlOrigin}/auth/login`, {
         email,
         password,
       });
