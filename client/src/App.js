@@ -17,19 +17,30 @@ export default function App() {
   const isAuth = useSelector((state) => state.auth.token);
 
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
+
+  const urlOrigin = "http://localhost:3001";
+
   return (
     <BrowserRouter>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Routes>
-          <Route path="/" element={<AuthPage />} />
+          <Route path="/" element={<AuthPage urlOrigin={urlOrigin} />} />
           <Route
             path="/home"
-            element={isAuth ? <HomePage /> : <Navigate to="/" />}
+            element={
+              isAuth ? <HomePage urlOrigin={urlOrigin} /> : <Navigate to="/" />
+            }
           />
           <Route
             path="/profile/:userId"
-            element={isAuth ? <ProfilePage /> : <Navigate to="/" />}
+            element={
+              isAuth ? (
+                <ProfilePage urlOrigin={urlOrigin} />
+              ) : (
+                <Navigate to="/" />
+              )
+            }
           />
           <Route path="*" element={<ErrorPage />} />
         </Routes>
