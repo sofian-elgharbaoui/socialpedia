@@ -1,12 +1,23 @@
-import { Container } from "@mui/material";
+import Container from "@mui/material/Container";
 import Grid from "@mui/material/Unstable_Grid2/Grid2";
 
 import NavBar from "../../components/NavBar";
-import UserWedget from "./UserWidget";
-import CreatePostWidget from "./CreatePostWidget";
-import FeedPosts from "./FeedPosts";
+import UserWedget from "../widgets/UserWidget";
+import CreatePostWidget from "../widgets/CreatePostWidget";
+import FeedPosts from "../widgets/FeedPosts";
+import AdWidget from "../widgets/AdWidget";
+import FriendsWidget from "../widgets/FriendsWidget";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { fetchUser } from "../authPage/authSlice";
 
-export default function HomePage() {
+export default function HomePage({ urlOrigin }) {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchUser());
+  }, [dispatch]);
+
   return (
     <>
       <NavBar />
@@ -16,11 +27,12 @@ export default function HomePage() {
             <UserWedget />
           </Grid>
           <Grid md={5} width="100%">
-            <CreatePostWidget />
-            <FeedPosts />
+            <CreatePostWidget urlOrigin={urlOrigin} />
+            <FeedPosts urlOrigin={urlOrigin} />
           </Grid>
           <Grid md={3.5} width="100%">
-            <UserWedget />
+            <AdWidget urlOrigin={urlOrigin} />
+            <FriendsWidget urlOrigin={urlOrigin} />
           </Grid>
         </Grid>
       </Container>

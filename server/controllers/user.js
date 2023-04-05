@@ -85,16 +85,18 @@ const addRemoveFriend = async (req, res) => {
   }
   const friendInfo = await User.findById(friendId);
   if (!friendInfo || friendId === id) {
-    throw new BadRequestErr("There is no user with this friend's id!");
+    throw new BadRequestErr("There is no friend with this id!");
   }
 
+  // to remove a friend from friends list
   if (userInfo.friends.includes(friendId)) {
     userInfo.friends = userInfo.friends.filter(
-      (friendID) => friendID != friendId
+      (friendID) => friendID !== friendId
     );
     friendInfo.friends = friendInfo.friends.filter(
-      (friendID) => friendID != id
+      (friendID) => friendID !== id
     );
+    // to add a friend from friends list
   } else {
     userInfo.friends.push(friendId);
     friendInfo.friends.push(id);

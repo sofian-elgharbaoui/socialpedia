@@ -3,6 +3,12 @@ const { BadRequestErr } = require("../errors/errors_index");
 const Post = require("../models/Post");
 const User = require("../models/User");
 
+const getPost = async (req, res) => {
+  const { postId } = req.params;
+  const post = await Post.findById(postId);
+  res.status(StatusCodes.OK).json({ post });
+};
+
 const getFeedPosts = async (req, res) => {
   const allPosts = await Post.find();
   res.status(StatusCodes.OK).json({ allPosts });
@@ -55,15 +61,12 @@ const likePost = async (req, res) => {
   if (postInfo.likes.has(id)) postInfo.likes.delete(id);
   else postInfo.likes.set(id, true);
 
-  const updatedPost = await Post.findByIdAndUpdate(
-    postId,
-    {
-      likes: postInfo.likes,
-    },
-    { new: true }
-  );
+  await Post.findByIdAndUpdate(postId, {
+    likes: postInfo.likes,
+  });
 
-  res.status(StatusCodes.OK).json({ updatedPost });
+  const allPosts = await Post.find();
+  res.status(StatusCodes.OK).json({ allPosts });
 };
 
 const commentOnPost = async (req, res) => {
@@ -82,6 +85,7 @@ const commentOnPost = async (req, res) => {
 };
 
 module.exports = {
+  getPost,
   getFeedPosts,
   getUserPosts,
   createPost,

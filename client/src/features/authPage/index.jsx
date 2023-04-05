@@ -38,7 +38,7 @@ function LoginNav() {
   );
 }
 
-export default function LoginPage() {
+export default function AuthPage({ urlOrigin }) {
   return (
     <>
       <LoginNav />
@@ -56,7 +56,7 @@ export default function LoginPage() {
             borderRadius: 2,
           }}
         >
-          <Form />
+          <Form urlOrigin={urlOrigin} />
         </Box>
       </Container>
     </>

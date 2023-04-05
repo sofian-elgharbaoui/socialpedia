@@ -5,7 +5,6 @@ const initialState = {
   mode: "light",
   user: null,
   token: null,
-  userPosts: [],
   posts: [],
 };
 
@@ -24,24 +23,11 @@ const authSlice = createSlice({
       state.user = null;
       state.token = null;
     },
+    setUser(state, action) {
+      state.user = action.payload.user;
+    },
     setFriends(state, action) {
-      if (state.user) {
-        state.friends = action.payload.friends;
-      } else {
-        console.error("User friends do not exist :(");
-      }
-    },
-    setUserPosts(state, action) {
-      state.userPosts = action.payload.userPosts;
-    },
-    setPost(state, action) {
-      if (
-        state.userPosts.every((post) => post._id !== action.payload.post._id)
-      ) {
-        state.userPosts.push(action.payload.post);
-      } else {
-        return;
-      }
+      state.user.friends = action.payload.friends;
     },
     setFeedPosts(state, action) {
       state.posts = action.payload.posts;
@@ -58,7 +44,33 @@ export const fetchPosts = createAsyncThunk(
       headers: { Authorization: getState().auth.token },
     });
 
-    if (allPosts) dispatch(setFeedPosts({ posts: allPosts }));
+    dispatch(setFeedPosts({ posts: allPosts.map((post) => post._id) }));
+  }
+);
+
+export const fetchUserPosts = createAsyncThunk(
+  "auth/fetchUserPosts",
+  async (_, { getState, dispatch }) => {
+    const {
+      data: { userPosts },
+    } = await axios.get(`http://localhost:3001/posts/profile`, {
+      headers: { Authorization: getState().auth.token },
+    });
+
+    dispatch(setFeedPosts({ posts: userPosts.map((post) => post._id) }));
+  }
+);
+
+export const fetchUser = createAsyncThunk(
+  "auth/fetchUser",
+  async (_, { getState, dispatch }) => {
+    const {
+      data: { userInfo },
+    } = await axios.get(`http://localhost:3001/user`, {
+      headers: { Authorization: getState().auth.token },
+    });
+
+    dispatch(setUser({ user: userInfo }));
   }
 );
 
@@ -67,8 +79,7 @@ export const {
   setLogin,
   setLogout,
   setFriends,
-  setUserPosts,
-  setPosts,
+  setUser,
   setFeedPosts,
 } = authSlice.actions;
 

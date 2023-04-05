@@ -30,13 +30,13 @@ import HelpIcon from "@mui/icons-material/Help";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 
-import { setMode } from "../features/authPage/authSlice";
+import { setLogout, setMode } from "../features/authPage/authSlice";
 
 export default function NavBar() {
   const [userMenuValue, setUserMenuValue] = useState("");
   const [isMenuOpened, setIsMenuOpened] = useState(false);
 
-  const mode = useSelector((state) => state.auth.mode);
+  const { mode } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
@@ -44,13 +44,20 @@ export default function NavBar() {
   const theme = useTheme();
   const isMobileOpened = useMediaQuery(theme.breakpoints.down("md"));
 
-  const user = useSelector((state) => state.auth.user);
-  const fullName =
-    "fake name" || `${user.firstName} ${user.lastName}`.toLowerCase();
+  const { firstName, lastName } = useSelector((state) => state.auth.user);
+  const fullName = [firstName, lastName]
+    .map((v) => v[0].toUpperCase() + v.slice(1))
+    .join(" ");
 
-  function handleCloseDrawer(e) {
+  function handleCloseDrawer() {
     setIsMenuOpened(false);
   }
+
+  function handleLogout() {
+    dispatch(setLogout());
+    navigate("/");
+  }
+
   return (
     <AppBar sx={{ bgcolor: "background.alt", py: 1.2 }} position="sticky">
       <Container>
@@ -111,6 +118,9 @@ export default function NavBar() {
               >
                 <MenuItem value="">{fullName}</MenuItem>
                 <MenuItem value="profile">Profile</MenuItem>
+                <MenuItem value="logout" onClick={handleLogout}>
+                  Log out
+                </MenuItem>
               </Select>
             </FlexBetween>
           )}
@@ -148,6 +158,9 @@ export default function NavBar() {
               >
                 <MenuItem value="">{fullName}</MenuItem>
                 <MenuItem value="profile">Profile</MenuItem>
+                <MenuItem value="logout" onClick={handleLogout}>
+                  Log out
+                </MenuItem>
               </Select>
             </FlexBetween>
           </Drawer>
