@@ -13,27 +13,26 @@ const registerUser = async (req, res) => {
     picturePath,
   } = req.body;
 
-  let inputsInfo;
+  const inputsInfo = {
+    firstName,
+    lastName,
+    occupation,
+    location,
+    email,
+    password,
+    picturePath,
+  };
 
-  if (!firstName || !lastName || !email || !password) {
+  if (!Object.values(inputsInfo).every((v) => v)) {
     throw new BadRequestErr("Please fill all the neccessary fields."); // I will mark them in the frontend
   }
-  inputsInfo = { firstName, lastName, email, password };
-  if (location) {
-    inputsInfo = { ...inputsInfo, location };
-  }
-  if (occupation) {
-    inputsInfo = { ...inputsInfo, occupation };
-  }
-  if (picturePath) {
-    inputsInfo = { ...inputsInfo, picturePath };
-  }
+
   // remember, I must write User.create(), not just User()
   //(if I want to do that, then I should put the new keyword before User(), which refers to a new instance)
-  let userInfo = await User.create(inputsInfo);
-
-  userInfo = userInfo.removePassword();
-  res.status(StatusCodes.CREATED).json({ userInfo });
+  await User.create(inputsInfo);
+  res
+    .status(StatusCodes.CREATED)
+    .json({ status: "You have successfully registered" });
 };
 
 const loginUser = async (req, res) => {

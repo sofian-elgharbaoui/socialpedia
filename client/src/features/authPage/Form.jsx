@@ -123,18 +123,18 @@ export default function MyForm({ urlOrigin }) {
       // I used teh formData API to add more fields to the form before sending it
       formData.append("picturePath", modifiedPicturePath(values.avatar.path));
 
-      let userData = await axios.post(`${urlOrigin}/auth/register`, formData);
+      const {
+        data: { userInfo },
+      } = await axios.post(`${urlOrigin}/auth/register`, formData);
 
       // I have to handle the server validation errors/success with this data
-      console.log(userData);
 
-      if (userData) {
+      if (userInfo) {
         onSubmitProps.resetForm();
         setIsRegister(false);
       }
     } catch (error) {
       console.error(error);
-
       setAlertMsg(error.response.data.message);
       setIsAlertOpened(true);
     }
@@ -142,15 +142,17 @@ export default function MyForm({ urlOrigin }) {
 
   async function login({ email, password }, onSubmitProps) {
     try {
-      const userData = await axios.post(`${urlOrigin}/auth/login`, {
+      const {
+        data: { userInfo, token },
+      } = await axios.post(`${urlOrigin}/auth/login`, {
         email,
         password,
       });
 
-      if (userData) {
+      if (userInfo) {
         const info = {
-          user: userData.data.userInfo,
-          token: `Bearer ${userData.data.token}`,
+          user: userInfo,
+          token: `Bearer ${token}`,
         };
 
         dispatch(setLogin(info));
@@ -158,8 +160,6 @@ export default function MyForm({ urlOrigin }) {
         navigate("/home");
       }
     } catch (error) {
-      console.log(error);
-
       setAlertMsg(error.response.data.message);
       setIsAlertOpened(true);
     }

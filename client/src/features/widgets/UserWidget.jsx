@@ -24,7 +24,7 @@ import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
 import { useNavigate } from "react-router-dom";
 
 function userImg(path) {
-  return `http://localhost:3001/assets/${path}`;
+  return `http://localhost:5000/assets/${path}`;
 }
 
 export default function UserWidget() {

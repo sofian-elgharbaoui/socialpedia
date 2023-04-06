@@ -64,6 +64,7 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// This method will run only if the user registered or modified his password
 userSchema.pre("save", async function (next) {
   // I made this functionality to skip the re-hashing password in case I don't modify it.
   if (!this.isModified("password")) {
@@ -76,8 +77,7 @@ userSchema.pre("save", async function (next) {
 
   let salt = await bcrypt.genSalt();
   let hashedPassword = await bcrypt.hash(this.password, salt);
-  //next time, don't forget to add the "await" keyxord before the hashed property and saltgen
-  // remember, bcryptjs
+  //next time, don't forget to add the "await" keyword before the hash method and saltgen
   this.password = hashedPassword;
   next();
 });
@@ -88,7 +88,7 @@ userSchema.methods.comparePassword = async function (password) {
 };
 
 userSchema.methods.createJWT = function () {
-  // don't forget to use "this" keyword, and not the "userInfo" variable n ame.
+  // don't forget to use "this" keyword, and not the "userInfo" variable name.
   return jwt.sign(
     { id: this._id, lastName: this.lastName },
     process.env.JWT_SECRET_KEY,
@@ -98,8 +98,8 @@ userSchema.methods.createJWT = function () {
 
 userSchema.methods.removePassword = function () {
   let userInfoObj = this.toObject();
-  // I used this because the delete keyword don't work,
-  // because the Obj returned from the mongoDB is not a plain Obj.
+  // I used this because the delete keyword doesn't work on the returned
+  // mongoDB obj, because it is not a plain Obj.
   delete userInfoObj.password;
   return userInfoObj;
 };

@@ -8,7 +8,7 @@ const getUser = async (req, res) => {
 
   let userInfo = await User.findById(id).select("-password");
   if (!userInfo) {
-    throw new BadRequestErr(`there is no user with this id: ${id}`);
+    throw new BadRequestErr(`There is no user with this id: ${id}`);
   }
 
   userInfo.friends = await formattedFriendsFn(userInfo.friends);
@@ -16,7 +16,7 @@ const getUser = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-  const id = req.params.id;
+  const { id } = req.params;
   const { firstName, lastName, location, occupation } = req.body;
   let dataToUpdate = {};
   if (firstName) dataToUpdate.firstName = firstName;
@@ -54,8 +54,6 @@ const deleteUser = async (req, res) => {
     aFriend.friends = aFriend.friends.filter((friendID) => friendID !== id);
     await aFriend.save();
   });
-
-  // await userInfo.save();
 
   await User.findByIdAndDelete(id);
   // the userInfo constant is keeping the info of that user inside it

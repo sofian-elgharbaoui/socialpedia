@@ -21,8 +21,7 @@ require("express-async-errors");
 app.use(cors());
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
-app.use(morgan("common"));
-app.use(express.json({ limit: "30mb", extended: true }));
+app.use(express.json({ limit: "30mb" }));
 app.use(express.urlencoded({ limit: "30mb", extended: true }));
 app.use("/assets", express.static(path.join(__dirname, "/public/assets")));
 
@@ -38,9 +37,11 @@ app.get("/", (req, res) => {
   res.status(200).send("hello world!");
 });
 
+app.use("/posts", postsRouter);
+// I put this middleware below, So I don't want to see the posts route logges
+app.use(morgan("common"));
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
-app.use("/posts", postsRouter);
 
 app.use(errorsHandler);
 

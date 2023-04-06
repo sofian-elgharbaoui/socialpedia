@@ -31,7 +31,7 @@ import { FlexBetween } from "../../components/FlexBetween";
 import { useState } from "react";
 
 function userImg(path) {
-  return `http://localhost:3001/assets/${path}`;
+  return `http://localhost:5000/assets/${path}`;
 }
 
 function modifiedPicturePath(picturePath) {

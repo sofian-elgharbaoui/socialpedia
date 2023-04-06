@@ -1,5 +1,5 @@
 // how to let the dispatch work inside a hook
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import {
@@ -15,7 +15,6 @@ import {
   Collapse,
   Box,
   CardMedia,
-  Skeleton,
 } from "@mui/material";
 
 import { useTheme } from "@mui/material/styles";
@@ -31,32 +30,15 @@ import { fetchPosts, setFriends } from "../authPage/authSlice";
 import { setFeedPosts } from "../authPage/authSlice";
 
 function imgSrc(path) {
-  return `http://localhost:3001/assets/${path}`;
+  return `http://localhost:5000/assets/${path}`;
 }
 
-export default function PostWidget({ urlOrigin, postId }) {
+export default function PostWidget({ urlOrigin, post }) {
   const [isCommentOpened, setIsCommentOpened] = useState(false);
   const [commentValue, setCommentValue] = useState("");
   const { palette } = useTheme();
   const dispatch = useDispatch();
-  const { token, posts } = useSelector((s) => s.auth);
-  // this solves the problem of makeing a simple var to assign the post value
-  const [post, setPost] = useState(null);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const {
-          data: { post: postInfo },
-        } = await axios.get(`${urlOrigin}/posts/${postId}`, {
-          headers: { Authorization: token },
-        });
-        setPost(postInfo);
-      } catch (error) {
-        console.error(error);
-      }
-    })();
-  }, [posts, postId, token, urlOrigin]);
+  const { token } = useSelector((s) => s.auth);
 
   const {
     _id: userId,
@@ -65,45 +47,8 @@ export default function PostWidget({ urlOrigin, postId }) {
     lastName: userLastName,
   } = useSelector((s) => s.auth.user);
 
-  // this condition is for the data that will be used before the comp finished mounting
-  if (!post) {
-    return (
-      <Card>
-        <CardHeader
-          avatar={
-            <Skeleton
-              animation="wave"
-              variant="circular"
-              width={40}
-              height={40}
-            />
-          }
-          title={<Skeleton animation="wave" width="80%" />}
-          subheader={<Skeleton animation="wave" width="80%" />}
-          action={
-            <Skeleton
-              animation="wave"
-              variant="circular"
-              width={40}
-              height={40}
-            />
-          }
-        />
-        <CardContent>
-          <Skeleton animation="wave" />
-        </CardContent>
-        <Skeleton animation="wave" variant="rounded" height={200} />
-        <CardActions>
-          <FlexBetween sx={{ width: "100%" }}>
-            <Skeleton animation="wave" width={40} height={20} />
-            <Skeleton animation="wave" width={40} height={20} />
-          </FlexBetween>
-        </CardActions>
-      </Card>
-    );
-  }
-
   const {
+    _id: postId,
     firstName: postFirstName,
     lastName: postLastName,
     location,

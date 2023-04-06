@@ -40,7 +40,7 @@ export const fetchPosts = createAsyncThunk(
   async (_, { getState, dispatch }) => {
     const {
       data: { allPosts },
-    } = await axios.get("http://localhost:3001/posts", {
+    } = await axios.get("http://localhost:5000/posts", {
       headers: { Authorization: getState().auth.token },
     });
 
@@ -53,7 +53,7 @@ export const fetchUserPosts = createAsyncThunk(
   async (_, { getState, dispatch }) => {
     const {
       data: { userPosts },
-    } = await axios.get(`http://localhost:3001/posts/profile`, {
+    } = await axios.get(`http://localhost:5000/posts/profile`, {
       headers: { Authorization: getState().auth.token },
     });
 
@@ -66,7 +66,7 @@ export const fetchUser = createAsyncThunk(
   async (_, { getState, dispatch }) => {
     const {
       data: { userInfo },
-    } = await axios.get(`http://localhost:3001/user`, {
+    } = await axios.get(`http://localhost:5000/user`, {
       headers: { Authorization: getState().auth.token },
     });
 
