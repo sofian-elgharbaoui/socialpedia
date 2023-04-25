@@ -5,30 +5,32 @@ import axios from "axios";
 import { Avatar, CardHeader, IconButton, Typography } from "@mui/material";
 
 import PersonRemoveAlt1Icon from "@mui/icons-material/PersonRemoveAlt1";
+import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 
 import { setFriends } from "../authPage/authSlice";
 import { WidgetWrapper } from "../../components/WidgetWrapper";
 
-export default function FriendsWidget({ urlOrigin }) {
-  const [friendsData, setFriendsData] = useState([]);
+export default function AllUsers({ urlOrigin }) {
+  const [usersData, setUsersData] = useState([]);
   const dispatch = useDispatch();
   const {
     token,
-    user: { friends },
+    user: { _id, friends },
   } = useSelector((s) => s.auth);
 
   useEffect(() => {
     (async () => {
       const {
-        data: { formattedFriends },
-      } = await axios.get(`${urlOrigin}/user/friends`, {
+        data: { allUsersInfo },
+      } = await axios.get(`${urlOrigin}/user/all`, {
         headers: { Authorization: token },
       });
-      setFriendsData(formattedFriends);
+      setUsersData(allUsersInfo);
     })();
   }, [friends, urlOrigin, token]);
 
   async function handleActionAddRemoveFriend(friendId) {
+    // if there is no data in the patch request, put null at their place
     const {
       data: { userFriends },
     } = await axios.patch(`${urlOrigin}/user/friends/${friendId}`, null, {
@@ -40,30 +42,35 @@ export default function FriendsWidget({ urlOrigin }) {
 
   return (
     <WidgetWrapper style={{ boxShadow: "none", marginTop: 8 }}>
-      <Typography>Friends List</Typography>
-      {friendsData &&
-        friendsData.map((friend) => {
-          const fullName = [friend.firstName, friend.lastName]
+      <Typography>Ussers List</Typography>
+      {usersData &&
+        usersData.map((user) => {
+          const fullName = [user.firstName, user.lastName]
             .map((v) => v[0].toUpperCase() + v.slice(1))
             .join(" ");
+
+          let actionIcon;
+          if (_id === user._id) return <></>;
+          if (friends.includes(user._id)) actionIcon = <PersonRemoveAlt1Icon />;
+          else actionIcon = <PersonAddAlt1Icon />;
 
           return (
             <CardHeader
               sx={{ pl: 0 }}
-              key={friend._id}
+              key={user._id}
               avatar={
                 <Avatar
-                  src={`${urlOrigin}/assets/${friend.picturePath}`}
+                  src={`${urlOrigin}/assets/${user.picturePath}`}
                   alt={fullName}
                 />
               }
               title={fullName}
-              subheader={friend.location}
+              subheader={user.location}
               action={
                 <IconButton
-                  onClick={() => handleActionAddRemoveFriend(friend._id)}
+                  onClick={() => handleActionAddRemoveFriend(user._id)}
                 >
-                  <PersonRemoveAlt1Icon />
+                  {actionIcon}
                 </IconButton>
               }
             />

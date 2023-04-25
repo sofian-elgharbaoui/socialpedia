@@ -124,12 +124,12 @@ export default function MyForm({ urlOrigin }) {
       formData.append("picturePath", modifiedPicturePath(values.avatar.path));
 
       const {
-        data: { userInfo },
+        data: { status },
       } = await axios.post(`${urlOrigin}/auth/register`, formData);
 
       // I have to handle the server validation errors/success with this data
 
-      if (userInfo) {
+      if (status) {
         onSubmitProps.resetForm();
         setIsRegister(false);
       }
@@ -157,7 +157,7 @@ export default function MyForm({ urlOrigin }) {
 
         dispatch(setLogin(info));
         onSubmitProps.resetForm();
-        navigate("/home");
+        navigate("/");
       }
     } catch (error) {
       setAlertMsg(error.response.data.message);

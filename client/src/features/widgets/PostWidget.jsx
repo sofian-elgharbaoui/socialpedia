@@ -26,8 +26,7 @@ import CommentsIcon from "@mui/icons-material/Comment";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 import { FlexBetween } from "../../components/FlexBetween";
-import { fetchPosts, setFriends } from "../authPage/authSlice";
-import { setFeedPosts } from "../authPage/authSlice";
+import { setFriends, setIsPosting } from "../authPage/authSlice";
 
 function imgSrc(path) {
   return `http://localhost:5000/assets/${path}`;
@@ -95,9 +94,7 @@ export default function PostWidget({ urlOrigin, post }) {
   }
   async function handleLikeButtonClick() {
     try {
-      const {
-        data: { allPosts },
-      } = await axios.patch(
+      await axios.patch(
         `${urlOrigin}/posts/like`,
         { postId },
         {
@@ -106,8 +103,7 @@ export default function PostWidget({ urlOrigin, post }) {
           },
         }
       );
-
-      dispatch(setFeedPosts({ posts: allPosts.map((post) => post._id) }));
+      dispatch(setIsPosting());
     } catch (error) {
       console.error(error);
     }
@@ -124,7 +120,7 @@ export default function PostWidget({ urlOrigin, post }) {
         },
         { headers: { Authorization: token } }
       );
-      dispatch(fetchPosts());
+      dispatch(setIsPosting());
       setCommentValue("");
     } catch (error) {
       console.error(error);

@@ -1,10 +1,9 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { nanoid } from "@reduxjs/toolkit";
 import { Form, Formik } from "formik";
 import Dropzone from "react-dropzone";
-import { setFeedPosts } from "../authPage/authSlice";
-import axios from "axios";
-import { useDispatch } from "react-redux";
+import { setIsPosting } from "../authPage/authSlice.js";
+
 import { useTheme, styled } from "@mui/material/styles";
 import {
   Box,
@@ -29,6 +28,7 @@ import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import { WidgetWrapper } from "../../components/WidgetWrapper";
 import { FlexBetween } from "../../components/FlexBetween";
 import { useState } from "react";
+import axios from "axios";
 
 function userImg(path) {
   return `http://localhost:5000/assets/${path}`;
@@ -86,10 +86,10 @@ const StyledButton = styled(Button)(({ theme }) => ({
 export default function CreatePostWidget({ urlOrigin }) {
   const [isDropzoneOpened, setIsDropzoneOpened] = useState(false);
   const [isImage, setIsImage] = useState(false);
-  const token = useSelector((s) => s.auth.token);
-  const { firstName, lastName, picturePath } = useSelector(
-    (state) => state.auth.user
-  );
+  const {
+    token,
+    user: { firstName, lastName, picturePath },
+  } = useSelector((state) => state.auth);
 
   const fullName = [firstName, lastName]
     .map((v) => v[0].toUpperCase() + v.slice(1))
@@ -124,15 +124,14 @@ export default function CreatePostWidget({ urlOrigin }) {
         formData.append("picturePath", modifiedPostPicture.name);
       }
 
-      const {
-        data: { allPosts },
-      } = await axios.post(`${urlOrigin}/posts`, formData, {
+      await axios.post(`${urlOrigin}/posts`, formData, {
         headers: {
           Authorization: token,
         },
       });
       // this line of code will make the feedPosts comp render again after each submiting click
-      dispatch(setFeedPosts({ posts: allPosts.map((post) => post._id) }));
+      dispatch(setIsPosting());
+      // dispatch(setFeedPosts({ posts: allPosts.map((post) => post._id) }));
       setIsImage(false);
       onSubmitProps.resetForm();
     } catch (error) {

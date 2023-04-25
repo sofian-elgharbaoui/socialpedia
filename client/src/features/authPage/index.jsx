@@ -32,7 +32,7 @@ function LoginNav() {
         }}
         onClick={() => navigate("/home")}
       >
-        Socialpedia
+        chatMarket
       </Typography>
     </AppBar>
   );

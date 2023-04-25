@@ -16,13 +16,14 @@ export default function ProfilePage({ urlOrigin }) {
   useEffect(() => {
     dispatch(fetchUser());
   }, [dispatch]);
+
   return (
     <>
       <NavBar />
       <Container sx={{ py: 1 }}>
         <Grid container spacing={1}>
           <Grid xs={12} sm={4}>
-            <UserWidget />
+            <UserWidget isProfile={true} />
             <FriendsWidget urlOrigin={urlOrigin} />
           </Grid>
           <Grid xs={12} sm={8}>

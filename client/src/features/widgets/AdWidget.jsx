@@ -7,10 +7,7 @@ export default function AdWidget({ urlOrigin }) {
     <WidgetWrapper>
       <FlexBetween flexWrap="wrap">
         <Typography color="neutral.dark">Sponsored</Typography>
-        <Typography
-          sx={{ cursor: "pointer", color: "neutral.medium" }}
-          onClick={() => console.log("qdf")}
-        >
+        <Typography sx={{ cursor: "pointer", color: "neutral.medium" }}>
           Create Ad
         </Typography>
       </FlexBetween>
@@ -23,10 +20,7 @@ export default function AdWidget({ urlOrigin }) {
       />
       <FlexBetween flexWrap="wrap">
         <Typography color="neutral.main">TomourBladi</Typography>
-        <Typography
-          sx={{ cursor: "pointer", color: "neutral.medium" }}
-          onClick={() => console.log("qdf")}
-        >
+        <Typography sx={{ cursor: "pointer", color: "neutral.medium" }}>
           tomourbladi.com
         </Typography>
       </FlexBetween>

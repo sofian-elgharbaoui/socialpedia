@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { fetchPosts, fetchUserPosts } from "../authPage/authSlice";
-
+import { useSelector } from "react-redux";
 import PostWidget from "../widgets/PostWidget.jsx";
 import {
   Box,
@@ -15,15 +13,13 @@ import axios from "axios";
 import { FlexBetween } from "../../components/FlexBetween";
 
 export default function FeedPosts({ urlOrigin, isProfile = false }) {
-  const dispatch = useDispatch();
   // the useSelector will run each time the s.auth.posts changed at every place
-  let postsIds = useSelector((s) => s.auth.posts);
-  let token = useSelector((s) => s.auth.token);
+  let { token, isPosting } = useSelector((s) => s.auth);
   const [posts, setPosts] = useState([null, null, null, null]);
+
   // this hook is used to fetch the posts according to the isProfile value
   useEffect(() => {
     if (isProfile) {
-      dispatch(fetchUserPosts());
       (async () => {
         const {
           data: { userPosts },
@@ -33,7 +29,6 @@ export default function FeedPosts({ urlOrigin, isProfile = false }) {
         setPosts(userPosts);
       })();
     } else {
-      dispatch(fetchPosts());
       (async () => {
         const {
           data: { allPosts },
@@ -43,7 +38,7 @@ export default function FeedPosts({ urlOrigin, isProfile = false }) {
         setPosts(allPosts);
       })();
     }
-  }, [dispatch, isProfile, postsIds, token]);
+  }, [token, isProfile, isPosting]);
 
   return (
     <Box display="flex" flexDirection="column-reverse" rowGap={1}>

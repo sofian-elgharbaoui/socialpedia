@@ -13,6 +13,8 @@ import {
   ListItemIcon,
   Typography,
   ListItem,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
@@ -22,12 +24,15 @@ import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import EditIcon from "@mui/icons-material/Edit";
 import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 function userImg(path) {
   return `http://localhost:5000/assets/${path}`;
 }
 
-export default function UserWidget() {
+export default function UserWidget({ isProfile = false }) {
+  const [isMenu, setIsMenu] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
   const theme = useTheme();
   const navigate = useNavigate();
 
@@ -47,6 +52,17 @@ export default function UserWidget() {
     .map((v) => v[0].toUpperCase() + v.slice(1))
     .join(" ");
 
+  function handleMenu(e) {
+    setIsMenu(true);
+    setAnchorEl(e.currentTarget);
+  }
+
+  function handleClose() {
+    setAnchorEl(null);
+    setIsMenu(false);
+  }
+
+  function handleChangeData() {}
   return (
     <Card style={{ boxShadow: "none", borderRadius: 14 }}>
       <CardHeader
@@ -54,17 +70,28 @@ export default function UserWidget() {
         title={fullName}
         subheader={friends.length + " friends"}
         action={
-          <IconButton
-            onClick={() => navigate(`/profile/${_id}`)}
-            sx={{
-              cursor: "pointer",
-              "&:hover": {
-                color: "grey.500",
-              },
-            }}
-          >
-            <ManageAccountsIcon />
-          </IconButton>
+          <>
+            <IconButton
+              onClick={handleMenu}
+              sx={{
+                cursor: "pointer",
+                "&:hover": {
+                  color: "grey.500",
+                },
+              }}
+            >
+              <ManageAccountsIcon />
+            </IconButton>
+            <Menu open={isMenu} anchorEl={anchorEl} onClose={handleClose}>
+              {isProfile ? (
+                <MenuItem onClick={handleChangeData}>Change Data</MenuItem>
+              ) : (
+                <MenuItem onClick={() => navigate(`/profile/${_id}`)}>
+                  Go to profile
+                </MenuItem>
+              )}
+            </Menu>
+          </>
         }
       />
       <Divider variant="middle" />

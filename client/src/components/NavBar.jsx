@@ -44,7 +44,7 @@ export default function NavBar() {
   const theme = useTheme();
   const isMobileOpened = useMediaQuery(theme.breakpoints.down("md"));
 
-  const { firstName, lastName } = useSelector((state) => state.auth.user);
+  const { firstName, lastName, _id } = useSelector((state) => state.auth.user);
   const fullName = [firstName, lastName]
     .map((v) => v[0].toUpperCase() + v.slice(1))
     .join(" ");
@@ -55,7 +55,11 @@ export default function NavBar() {
 
   function handleLogout() {
     dispatch(setLogout());
-    navigate("/");
+    navigate("/auth");
+  }
+
+  function handleProfile() {
+    navigate(`/profile/${_id}`);
   }
 
   return (
@@ -72,9 +76,9 @@ export default function NavBar() {
                   cursor: "pointer",
                 },
               }}
-              onClick={() => navigate("/home")}
+              onClick={() => navigate("/")}
             >
-              Socialpedia
+              chatMarket
             </Typography>
             {!isMobileOpened && (
               <TextField
@@ -99,7 +103,7 @@ export default function NavBar() {
               <IconButton onClick={() => dispatch(setMode())}>
                 {mode === "light" ? <LightModeIcon /> : <DarkModeIcon />}
               </IconButton>
-              <IconButton>
+              <IconButton onClick={() => navigate("/messenger")}>
                 <MessageIcon />
               </IconButton>
               <IconButton>
@@ -117,7 +121,9 @@ export default function NavBar() {
                 inputProps={{ "aria-label": "user account info" }}
               >
                 <MenuItem value="">{fullName}</MenuItem>
-                <MenuItem value="profile">Profile</MenuItem>
+                <MenuItem value="profile" onClick={handleProfile}>
+                  Profile
+                </MenuItem>
                 <MenuItem value="logout" onClick={handleLogout}>
                   Log out
                 </MenuItem>
@@ -139,7 +145,7 @@ export default function NavBar() {
               <IconButton onClick={() => dispatch(setMode())}>
                 {mode === "light" ? <LightModeIcon /> : <DarkModeIcon />}
               </IconButton>
-              <IconButton>
+              <IconButton onClick={() => navigate("/messenger")}>
                 <MessageIcon />
               </IconButton>
               <IconButton>
@@ -157,7 +163,9 @@ export default function NavBar() {
                 inputProps={{ "aria-label": "user account info" }}
               >
                 <MenuItem value="">{fullName}</MenuItem>
-                <MenuItem value="profile">Profile</MenuItem>
+                <MenuItem value="profile" onClick={handleProfile}>
+                  Profile
+                </MenuItem>
                 <MenuItem value="logout" onClick={handleLogout}>
                   Log out
                 </MenuItem>
