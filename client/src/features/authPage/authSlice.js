@@ -5,7 +5,7 @@ const initialState = {
   mode: "light",
   user: null,
   token: null,
-  posts: [],
+  isPosting: false,
 };
 
 const authSlice = createSlice({
@@ -29,37 +29,37 @@ const authSlice = createSlice({
     setFriends(state, action) {
       state.user.friends = action.payload.friends;
     },
-    setFeedPosts(state, action) {
-      state.posts = action.payload.posts;
+    setIsPosting(state) {
+      state.isPosting = !state.isPosting;
     },
   },
 });
 
-export const fetchPosts = createAsyncThunk(
-  "auth/fetchPosts",
-  async (_, { getState, dispatch }) => {
-    const {
-      data: { allPosts },
-    } = await axios.get("http://localhost:5000/posts", {
-      headers: { Authorization: getState().auth.token },
-    });
+// export const fetchPosts = createAsyncThunk(
+//   "auth/fetchPosts",
+//   async (_, { getState, dispatch }) => {
+//     const {
+//       data: { allPosts },
+//     } = await axios.get("http://localhost:5000/posts", {
+//       headers: { Authorization: getState().auth.token },
+//     });
 
-    dispatch(setFeedPosts({ posts: allPosts.map((post) => post._id) }));
-  }
-);
+//     dispatch(setFeedPosts({ posts: allPosts.map((post) => post._id) }));
+//   }
+// );
 
-export const fetchUserPosts = createAsyncThunk(
-  "auth/fetchUserPosts",
-  async (_, { getState, dispatch }) => {
-    const {
-      data: { userPosts },
-    } = await axios.get(`http://localhost:5000/posts/profile`, {
-      headers: { Authorization: getState().auth.token },
-    });
+// export const fetchUserPosts = createAsyncThunk(
+//   "auth/fetchUserPosts",
+//   async (_, { getState, dispatch }) => {
+//     const {
+//       data: { userPosts },
+//     } = await axios.get(`http://localhost:5000/posts/profile`, {
+//       headers: { Authorization: getState().auth.token },
+//     });
 
-    dispatch(setFeedPosts({ posts: userPosts.map((post) => post._id) }));
-  }
-);
+//     dispatch(setFeedPosts({ posts: userPosts.map((post) => post._id) }));
+//   }
+// );
 
 export const fetchUser = createAsyncThunk(
   "auth/fetchUser",
@@ -80,7 +80,7 @@ export const {
   setLogout,
   setFriends,
   setUser,
-  setFeedPosts,
+  setIsPosting,
 } = authSlice.actions;
 
 export default authSlice.reducer;

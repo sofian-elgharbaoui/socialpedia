@@ -11,13 +11,23 @@ const getUser = async (req, res) => {
     throw new BadRequestErr(`There is no user with this id: ${id}`);
   }
 
-  userInfo.friends = await formattedFriendsFn(userInfo.friends);
+  // userInfo.friends = await formattedFriendsFn(userInfo.friends);
   res.status(StatusCodes.OK).json({ userInfo });
+};
+
+const getAllUsers = async (req, res) => {
+  let allUsersInfo = await User.find();
+
+  // this to return just what we need from the obj
+  const allUsersIds = allUsersInfo.map((u) => u._id.toHexString());
+  allUsersInfo = await formattedFriendsFn(allUsersIds);
+  res.status(StatusCodes.OK).json({ allUsersInfo });
 };
 
 const updateUser = async (req, res) => {
   const { id } = req.params;
   const { firstName, lastName, location, occupation } = req.body;
+
   let dataToUpdate = {};
   if (firstName) dataToUpdate.firstName = firstName;
   if (lastName) dataToUpdate.lastName = lastName;
@@ -27,7 +37,7 @@ const updateUser = async (req, res) => {
   const userInfo = await User.findByIdAndUpdate(id, dataToUpdate, {
     new: true,
     runValidators: true,
-  }).select("-password");
+  }).select("-password -CLIENT_SECRET -CLIENT_ID");
   if (!userInfo) {
     throw new BadRequestErr(`there is no user with this id: ${id}`);
   }
@@ -74,6 +84,16 @@ const getAllFriends = async (req, res) => {
   res.status(StatusCodes.OK).json({ formattedFriends });
 };
 
+const getFriend = async (req, res) => {
+  const { friendId } = req.params;
+  const friendsData = await User.findById(friendId).select("-password");
+  if (!friendsData) {
+    throw new BadRequestErr("There is no friend with this id!");
+  }
+
+  res.status(StatusCodes.ACCEPTED).json({ friendsData });
+};
+
 const addRemoveFriend = async (req, res) => {
   const { id, friendId } = req.params;
 
@@ -108,8 +128,10 @@ const addRemoveFriend = async (req, res) => {
 
 module.exports = {
   getUser,
+  getAllUsers,
+  getAllFriends,
+  getFriend,
   updateUser,
   deleteUser,
   addRemoveFriend,
-  getAllFriends,
 };

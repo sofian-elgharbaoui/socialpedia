@@ -1,4 +1,4 @@
-const colorTokens = {
+export const colorTokens = {
   grey: {
     0: "#FFFFFF",
     10: "#F6F6F6",

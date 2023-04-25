@@ -10,6 +10,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import AuthPage from "./features/authPage/index";
 import HomePage from "./features/homePage/index";
 import ProfilePage from "./features/profilePage/index";
+import Messenger from "./features/messengerPage/index";
 import ErrorPage from "./features/ErrorPage";
 
 export default function App() {
@@ -25,20 +26,34 @@ export default function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Routes>
-          <Route path="/" element={<AuthPage urlOrigin={urlOrigin} />} />
           <Route
-            path="/home"
+            path="/"
             element={
-              isAuth ? <HomePage urlOrigin={urlOrigin} /> : <Navigate to="/" />
+              isAuth ? (
+                <HomePage urlOrigin={urlOrigin} />
+              ) : (
+                <Navigate to="/auth" />
+              )
             }
           />
+          <Route path="/auth" element={<AuthPage urlOrigin={urlOrigin} />} />
           <Route
             path="/profile/:userId"
             element={
               isAuth ? (
                 <ProfilePage urlOrigin={urlOrigin} />
               ) : (
-                <Navigate to="/" />
+                <Navigate to="/auth" />
+              )
+            }
+          />
+          <Route
+            path="/messenger"
+            element={
+              isAuth ? (
+                <Messenger urlOrigin={urlOrigin} />
+              ) : (
+                <Navigate to="/auth" />
               )
             }
           />

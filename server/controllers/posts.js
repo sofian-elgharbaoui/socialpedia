@@ -17,7 +17,8 @@ const getFeedPosts = async (req, res) => {
 const getUserPosts = async (req, res) => {
   const { id } = req.params;
   // to sort a result in a reversed order, add "-" before the property name.
-  const userPosts = await Post.find({ createdBy: id }).sort("-updatedAt");
+  const userPosts = await Post.find({ createdBy: id });
+  // .sort("-updatedAt");
   res.status(StatusCodes.OK).json({ userPosts });
 };
 

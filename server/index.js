@@ -4,18 +4,13 @@ const express = require("express");
 const { default: helmet } = require("helmet");
 const cors = require("cors");
 const morgan = require("morgan");
+const http = require("http");
+const app = express();
+const httpServer = http.createServer(app);
 
 const connectDB = require("./db/connectDB");
-/*
-Why I MUST declare the "express-async-errors" package before the errorsHandler middleware?
-Answer: I had to do that because I was using the "express-async-errors" that
-holds my errors in my errorsHandler,
-To conslude, I have to declare something (e.i. package, etc) first if I want to use it in any middleware;
-I ALLWAYS have to write the configuration just after the packages.
-*/
 
 // configuration
-const app = express();
 require("dotenv").config();
 require("express-async-errors");
 app.use(cors());
@@ -28,13 +23,16 @@ app.use("/assets", express.static(path.join(__dirname, "/public/assets")));
 // error middleware
 const errorsHandler = require("./middlewares/errors_handler");
 
+// establish the chat
+require("./controllers/chatServer")(httpServer);
+
 // routers
 const authRouter = require("./routes/auth");
 const userRouter = require("./routes/user");
 const postsRouter = require("./routes/posts");
 
 app.get("/", (req, res) => {
-  res.status(200).send("hello world!");
+  res.status(200).sendFile(path.join(__dirname, "/public/index.html"));
 });
 
 app.use("/posts", postsRouter);
@@ -50,7 +48,8 @@ const port = process.env.PORT || 3001;
 (async function () {
   try {
     await connectDB(process.env.URI);
-    app.listen(port, (err) => {
+    // the problem was here, so the connecction didn't want to extablish
+    httpServer.listen(port, (err) => {
       if (err) console.log(err);
       else console.log(`Server is listening on port ${port}...`);
     });
