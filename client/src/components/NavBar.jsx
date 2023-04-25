@@ -78,7 +78,7 @@ export default function NavBar() {
               }}
               onClick={() => navigate("/")}
             >
-              chatMarket
+              Olimon
             </Typography>
             {!isMobileOpened && (
               <TextField
